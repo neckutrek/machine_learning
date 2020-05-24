@@ -44,6 +44,45 @@ Surface::~Surface()
    }
 }
 
+Surface::Surface(const Surface& other)
+{
+   *this = other;
+}
+
+Surface::Surface(const Surface&& other) noexcept
+{
+   *this = other;
+}
+
+Surface& Surface::operator=(const Surface& other)
+{
+   if (!other.m_surface)
+   {
+      throw std::runtime_error("Error while copying surface: Source object has no initialized surface!");
+   }
+
+   m_surface = SDL_ConvertSurface(other.m_surface, other.m_format, SDL_SWSURFACE);
+   m_format = m_surface->format;
+   SDL_GetClipRect(m_surface, &m_clipRect);
+
+   return *this;
+}
+
+Surface& Surface::operator=(const Surface&& other) noexcept
+{
+   Surface& o = const_cast<Surface&>(other);
+
+   m_surface = other.m_surface;
+   o.m_surface = nullptr;
+
+   m_format = m_surface->format;
+   o.m_format = nullptr;
+
+   m_clipRect = other.m_clipRect;
+
+   return *this;
+}
+
 void Surface::create(
    const std::string& filepath,
    const SDL_PixelFormat* format)

@@ -42,8 +42,11 @@ int main(int argc, char* args[])
       std::unique_ptr<Surface> surface = std::make_unique<Surface>();
       surface->create(imgPath, window->getFormat());
 
+      std::unique_ptr<Surface> surface2 = std::make_unique<Surface>();
+      *surface2 = *surface;
+
       window->clear();
-      window->draw(*surface, 1024/2-200, 768/2-200);
+      window->draw(*surface2, 10, 10);
       window->present();
 
       SDL_Delay( 5000 );

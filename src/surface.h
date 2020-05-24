@@ -17,6 +17,12 @@ public:
    Surface();
    ~Surface();
 
+   Surface(const Surface& other);
+   Surface(const Surface&& other) noexcept;
+
+   Surface& operator=(const Surface& other);
+   Surface& operator=(const Surface&& other) noexcept;
+
    void                 create(
                            const std::string& filepath,
                            const SDL_PixelFormat* format = nullptr);
