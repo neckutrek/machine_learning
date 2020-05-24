@@ -67,6 +67,43 @@ void Window::create(
    m_renderer = renderer;
 }
 
+void Window::draw(
+   const Surface& surface,
+   int x,
+   int y)
+{
+   if (!m_window)
+   {
+      throw std::runtime_error("Error when drawing surface on window: Window hasn't been initialized!");
+   }
+
+   if (!m_renderer)
+   {
+      throw std::runtime_error("Error when drawing surface on window: Renderer hasn't been initialized!");
+   }
+
+   const SDL_Surface* sdlSurface = surface.getSDLSurface();
+   if (!sdlSurface)
+   {
+      throw std::runtime_error("Error when drawing surface on window: Surface hasn't been initialized!");
+   }
+
+   const SDL_Rect* srcRect = surface.getSDLRect();
+   if (!srcRect)
+   {
+      throw std::runtime_error("Error when drawing surface on window: Surface doesn't have a proper clip rect!");
+   }
+
+   // SDL has a louse API that's why...
+   SDL_Surface* sf = const_cast<SDL_Surface*>(sdlSurface);
+   SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, sf);
+
+   SDL_Rect dstRect = {
+      x, y, srcRect->w, srcRect->h};
+
+   SDL_RenderCopy(m_renderer, texture, srcRect, &dstRect);
+}
+
 void Window::fillWithColor(
    uint8_t red,
    uint8_t green,
@@ -123,11 +160,18 @@ SDL_Renderer* Window::getRenderer()
    return m_renderer;
 }
 
-void Window::update()
+void Window::clear()
 {
    if (m_renderer)
    {
       SDL_RenderClear(m_renderer);
+   }
+}
+
+void Window::present()
+{
+   if (m_renderer)
+   {
       SDL_RenderPresent(m_renderer);
    }
 }

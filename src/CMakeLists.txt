@@ -1,5 +1,6 @@
 set(SOURCES
    main.cpp
+   surface.cpp
    window.cpp)
 
 add_executable(main ${SOURCES})

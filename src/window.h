@@ -6,6 +6,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "surface.h"
+
 class Window
 {
 private:
@@ -32,6 +34,11 @@ public:
                         uint8_t blue,
                         uint8_t alpha = 0xff);
 
+   void              draw(
+                        const Surface& surface,
+                        int x = 0,
+                        int y = 0);
+
    const SDL_PixelFormat*
                      getFormat();
 
@@ -39,7 +46,8 @@ public:
    /// Will return non-nullptr pointer or throw exception
    SDL_Renderer*     getRenderer();
 
-   void              update();
+   void              clear();
+   void              present();
 };
 
 #endif // INCGRD_WINDOW_H
